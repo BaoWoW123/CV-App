@@ -10,7 +10,10 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tab: {},
       general: [],
+      experiences: [],
+      education: [],
     };
     this.updateText = this.updateText.bind(this);
   }
@@ -25,8 +28,28 @@ class App extends Component {
     });
   };
 
+  updateExp = (el) => {
+    let input = el.target;
+    this.setState((prevState) => ({
+      tab: {
+        ...prevState.tab,
+        [input.id]: input.value,
+        id: uniquid(),
+      },
+    }));
+  };
+  addExp = () => {
+    this.setState(
+      {
+        experiences: this.state.experiences.concat(this.state.tab),
+        tab: {},
+      },
+    );
+  };
+
   submitForm = (e) => {
     e.preventDefault();
+    this.addExp();
     this.setState({
       general: [
         this.state.firstName,
@@ -37,7 +60,7 @@ class App extends Component {
         this.state.email,
       ],
     });
-    console.log("sent form");
+    console.log("sent form", this.state);
   };
 
   render() {
@@ -46,10 +69,9 @@ class App extends Component {
         <div className="title">CV Creator</div>
         <form className="form" onSubmit={this.submitForm}>
           <General onInput={this.updateText} />
-          <Experience />
-          <Education />
-          <button type="submit" className="displayForm">
-            {" "}
+          <Experience updateExp={this.updateExp} addExp={this.addExp} />
+          <Education onInput={this.updateText} />
+          <button type="submit" className="displayFormBtn">
             Display CV
           </button>
         </form>

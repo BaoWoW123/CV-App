@@ -1,5 +1,5 @@
 body {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: "Times New Roman", Times, serif;
   margin: 0;
 }
 .App {
@@ -12,7 +12,6 @@ body {
   width: 100vw;
   grid-gap: 2rem;
   font-size: 2rem;
-  font-weight: 600;
   padding: 2rem;
   box-sizing: border-box;
 }
@@ -24,6 +23,7 @@ body {
   grid-column: 1/3;
   color: white;
   font-size: 4rem;
+  font-weight: 600;
   background-color: #7395ae;
   box-shadow: inset 2px -2px 3px white;
 }
@@ -68,6 +68,7 @@ button:active {
   background-color: #7395ae;
   box-shadow: inset 2px -2px 3px white;
   color: white;
+  font-weight: 600;
 }
 .overview {
   grid-row: 2/3;
@@ -77,21 +78,65 @@ button:active {
   box-shadow: inset 2px -5px 3px white;
 }
 .overview > :first-child {
-  border-bottom: 3px solid white;
   padding: 20px;
-}
-.overview > :nth-child(n + 2) {
-  border-bottom: 2px solid white;
-  margin: 20px;
+  padding-bottom: 10px;
 }
 
-.displayForm {
-  height: 5vh;
+/* after first child */
+.overview > :nth-child(n + 2) {
+  margin: 0px 20px;
+}
+
+.displayFormBtn {
+  display: flex;
+  justify-content: center;
   margin: auto;
   color: white;
   background-color: #7395ae;
   box-shadow: inset 2px -2px 3px white;
   border-radius: 5px;
   font-size: 1.5rem;
-  font-weight: 600;
+  padding: 1rem;
+}
+
+/* OVERVIEW GENERAL */
+.displayGeneral {
+  display: flex;
+  flex-direction: column;
+}
+
+.genMain {
+  display: flex;
+  justify-content: space-around;
+  padding: 0px 50px;
+  font-size: larger;
+  border-bottom: 2px solid white;
+}
+
+.genOther {
+  font-size: smaller;
+  padding: 10px;
+}
+
+/* OVERVIEW EXPERIENCE */
+
+.displayExperience > :first-child {
+  border-bottom: 2px solid white;
+}
+
+.job {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: smaller;
+  padding-bottom: 5px;
+}
+.job > * {
+  padding-left: 1rem;
+  font-size: 0.9em;
+}
+
+.job > :last-child {
+  font-size: 0.7em;
+  padding-left: 2rem;
 }
