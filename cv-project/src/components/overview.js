@@ -28,7 +28,7 @@ const Overview = (props) => {
         <div className="dispExpMain">
           {experiences.map((job) => {
             return (
-              <div className="job">
+              <div className="job" key={job.id}>
                 {job.expPosition}
                 <div>
                   {job.expCompany} {job.expFrom} - {job.expTo}
@@ -38,9 +38,24 @@ const Overview = (props) => {
             );
           })}
         </div>
-        <div>
-          Education
-          <div className="displayEdu"></div>
+      </div>
+      <div className="displayEducation">
+        <div>Education</div>
+        <div className="displayEduMain">
+          {educations.map((edu) => {
+            return (
+              <div className="edu" key={edu.id}>
+                {edu.eduDegree}
+                <div>
+                  {edu.eduCollege} GPA {edu.eduGpa}
+                </div>
+                <div>
+                  {" "}
+                  {edu.eduCity}, {edu.eduState} {edu.eduFrom} - {edu.eduTo}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

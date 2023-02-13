@@ -50,9 +50,9 @@ class Experience extends Component {
         </div>
         <button
           type="button"
-          className="addBtn"
-          onClick={() => {
-            this.props.addExp();
+          id="addExpBtn"
+          onClick={(el) => {
+            this.props.addExp(el);
             this.clearInput();
           }}
         >
