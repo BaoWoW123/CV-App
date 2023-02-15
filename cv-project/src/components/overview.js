@@ -1,7 +1,17 @@
 const Overview = (props) => {
-  let general = props.props.general;
-  let experiences = props.props.experiences;
-  let educations = props.props.educations;
+  let general = props.props[0];
+  let experiences = props.props[1];
+  let educations = props.props[2];
+  if (!general) {
+    return null;
+  }
+  if (!experiences) {
+    return null;
+  }
+
+  if (!educations) {
+    return null;
+  }
   return (
     <div className="overview">
       <div className="displayGeneral">
@@ -28,12 +38,12 @@ const Overview = (props) => {
         <div className="dispExpMain">
           {experiences.map((job) => {
             return (
-              <div className="job" key={job.id}>
-                {job.expPosition}
+              <div className="job" key={job.expTab.id}>
+                {job.expTab.expPosition}
                 <div>
-                  {job.expCompany} {job.expFrom} - {job.expTo}
+                  {job.expTab.expCompany} {job.expTab.expFrom} - {job.expTab.expTo}
                 </div>
-                <div>{job.expDescrip}</div>
+                <div>{job.expTab.expDescrip}</div>
               </div>
             );
           })}
@@ -44,14 +54,14 @@ const Overview = (props) => {
         <div className="displayEduMain">
           {educations.map((edu) => {
             return (
-              <div className="edu" key={edu.id}>
-                {edu.eduDegree}
+              <div className="edu" key={edu.eduTab.id}>
+                {edu.eduTab.eduDegree}
                 <div>
-                  {edu.eduCollege} GPA {edu.eduGpa}
+                  {edu.eduTab.eduCollege} GPA {edu.eduTab.eduGpa}
                 </div>
                 <div>
                   {" "}
-                  {edu.eduCity}, {edu.eduState} {edu.eduFrom} - {edu.eduTo}
+                  {edu.eduTab.eduCity}, {edu.eduTab.eduState} {edu.eduTab.eduFrom} - {edu.eduTab.eduTo}
                 </div>
               </div>
             );

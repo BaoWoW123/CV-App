@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState, useRef, useCallback } from "react";
 import uniquid from "uniquid";
 import "./App.css";
 import Education from "./components/education";
@@ -6,33 +6,33 @@ import Experience from "./components/experience";
 import General from "./components/general";
 import Overview from "./components/overview";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      expTab: {},
-      eduTab: {},
-      general: [],
-      experiences: [],
-      educations: [],
-    };
-    this.updateText = this.updateText.bind(this);
-  }
-  updateText = (e) => {
+const App = () => {
+  const [tab, setTab] = useState({});
+  const [expTab, setExpTab] = useState({});
+  const [eduTab, setEduTab] = useState({});
+  const [general, setGeneral] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+  const [educations, setEducations] = useState([]);
+
+  //USED ONLY FOR GENERAL
+  const updateText = (e) => {
     let input = e.target;
     let id = input.id;
-    this.setState({
+    setTab((prevState) => ({
+      ...prevState,
       [id]: {
         text: input.value,
         id: uniquid(),
       },
-    });
+    }));
   };
 
-  updateTab = (el) => {
+  const updateTab = (el) => {
     let input = el.target;
+
     if (input.id.slice(0, 3) === "exp") {
-      this.setState((prevState) => ({
+      setExpTab((prevState) => ({
+        ...prevState,
         expTab: {
           ...prevState.expTab,
           [input.id]: input.value,
@@ -40,7 +40,8 @@ class App extends Component {
         },
       }));
     } else {
-      this.setState((prevState) => ({
+      setEduTab((prevState) => ({
+        ...prevState,
         eduTab: {
           ...prevState.eduTab,
           [input.id]: input.value,
@@ -49,36 +50,30 @@ class App extends Component {
       }));
     }
   };
-  addTab = (el, key) => {
+  const addTab = (el, key) => {
     if (key === "eduTab" || (el && el.target.id === "addExpBtn")) {
-      this.setState({
-        experiences: this.state.experiences.concat(this.state.expTab),
-        expTab: {},
-      });
+      setExperiences(experiences.concat(expTab));
+      setExpTab({});
     } else if (key === "expTab" || (el && el.target.id === "addEduBtn")) {
-      this.setState({
-        educations: this.state.educations.concat(this.state.eduTab),
-        eduTab: {},
-      });
+      setEducations(educations.concat(eduTab));
+      setEduTab({});
     }
   };
 
-  submitForm = (e) => {
+  const submitForm = (e) => {
     e.preventDefault();
-    this.addTab(null, "eduTab");
-    this.addTab(null, "expTab");
-    this.setState({
-      general: [
-        this.state.firstName,
-        this.state.lastName,
-        this.state.title,
-        this.state.description,
-        this.state.phone,
-        this.state.email,
-      ],
-    });
+    addTab(null, "eduTab");
+    addTab(null, "expTab");
+    setGeneral([
+      tab.firstName,
+      tab.lastName,
+      tab.title,
+      tab.description,
+      tab.phone,
+      tab.email,
+    ]);
   };
-  printCv() {
+  function printCv() {
     let printContents = document.querySelector(".overview").innerHTML;
     let originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents;
@@ -86,27 +81,107 @@ class App extends Component {
     document.body.innerHTML = originalContents;
   }
 
-  render() {
-    return (
-      <div className="App">
+  return (
+    <div className="App">
+      <div className="title">CV Creator</div>
+      <form className="form" onSubmit={submitForm}>
+        <General onInput={updateText} />
+        <Experience updateExp={updateTab} addExp={addTab} />
+        <Education updateEdu={updateTab} addEdu={addTab} />
+        <div className="buttons">
+          <button type="submit" className="displayFormBtn">
+            Display CV
+          </button>
+          <button type="button" className="printBtn" onClick={printCv}>
+            Print CV
+          </button>
+        </div>
+      </form>
+      <Overview props={[general, experiences, educations]} />
+    </div>
+  );
+};
+
+export default App;
+
+/* const App = props => {
+  const [expTab, setExpTab] = useState({});
+  const [eduTab, setEduTab] = useState({});
+  const [general, setGeneral] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+  const [educations, setEducations] = useState([]);
+  const [id, setId] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [phone, setPhone] = useState();
+  const [email, setEmail] = useState();
+  const state = useRef();
+  const updateText = useCallback(() => {
+    let input = e.target;
+    let id = input.id;
+    setId({
+      text: input.value,
+      id: uniquid()
+    });
+  });
+  const updateTab = useCallback(() => {
+    let input = el.target;
+
+    if (input.id.slice(0, 3) === "exp") {
+      setExpTab(prevExpTab => {
+        return { ...prevExpTab,
+          [input.id]: input.value,
+          id: uniquid()
+        };
+      });
+    } else {
+      setEduTab(prevEduTab => {
+        return { ...prevEduTab,
+          [input.id]: input.value,
+          id: uniquid()
+        };
+      });
+    }
+  });
+  const addTab = useCallback(() => {
+    if (key === "eduTab" || el && el.target.id === "addExpBtn") {
+      setExperiences(experiences.concat(expTab));
+      setExpTab({});
+    } else if (key === "expTab" || el && el.target.id === "addEduBtn") {
+      setEducations(educations.concat(eduTab));
+      setEduTab({});
+    }
+  });
+  const submitForm = useCallback(() => {
+    e.preventDefault();
+    addTab(null, "eduTab");
+    addTab(null, "expTab");
+    setGeneral([firstName, lastName, title, description, phone, email]);
+  });
+  const printCv = useCallback(() => {
+    let printContents = document.querySelector(".overview").innerHTML;
+    let originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  });
+  return <div className="App">
         <div className="title">CV Creator</div>
-        <form className="form" onSubmit={this.submitForm}>
-          <General onInput={this.updateText} />
-          <Experience updateExp={this.updateTab} addExp={this.addTab} />
-          <Education updateEdu={this.updateTab} addEdu={this.addTab} />
+        <form className="form" onSubmit={submitForm}>
+          <General onInput={updateText} />
+          <Experience updateExp={updateTab} addExp={addTab} />
+          <Education updateEdu={updateTab} addEdu={addTab} />
           <div className="buttons">
             <button type="submit" className="displayFormBtn">
               Display CV
             </button>
-            <button type="button" className="printBtn" onClick={this.printCv}>
+            <button type="button" className="printBtn" onClick={printCv}>
               Print CV
             </button>
           </div>
         </form>
-        <Overview props={this.state} />
-      </div>
-    );
-  }
-}
-
-export default App;
+        <Overview props={state.current} />
+      </div>;
+}; */
